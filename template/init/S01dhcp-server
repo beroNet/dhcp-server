@@ -1,0 +1,35 @@
+#!/bin/bash
+
+SU5JVF9USElTX1NDUklQVF9BU19ST09U=TRUE
+
+# check if conf in appfs relevant to us has changed
+function configuration_changed {
+
+	echo -n "1"
+}
+
+
+case "${1}" in
+	start)
+		echo "Starting App..."
+		udhcpd /apps/dhcp-server/etc/udhcpd.conf
+		;;
+	stop)
+		echo "Stopping App..."
+		killall -9 udhcpd
+		;;
+	restart)
+		echo "Restarting App..."
+		${0} stop
+		${0} start
+		;;
+	apply)
+		if [ "$(configuration_changed)" = "1" ]; then
+			${0} restart
+		fi
+		;;
+	*)
+		echo "Usage ${0} [start|stop|restart]"
+		exit 1
+		;;
+esac
